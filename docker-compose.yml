@@ -21,6 +21,19 @@ services:
       - "3000:3000"
     depends_on:
       - db
+  worker:
+    build: .
+    env_file:
+      - .env
+      - ./apac-api-proxy/.env
+    environment:
+      RAILS_ENV: production
+      RACK_ENV: production
+    command: bash -c "sidekiq"
+    volumes:
+      - ./apac-api-proxy:/usr/src/app
+    depends_on:
+      - db
   nginx:
     restart: always
     build: ./nginx/
